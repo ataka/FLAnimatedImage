@@ -87,6 +87,10 @@
 - (void)commonInit
 {
     self.runLoopMode = [[self class] defaultRunLoopMode];
+    
+    if (@available(iOS 11.0, *)) {
+        self.accessibilityIgnoresInvertColors = YES;
+    }
 }
 
 
@@ -97,6 +101,9 @@
 {
     if (![_animatedImage isEqual:animatedImage]) {
         if (animatedImage) {
+            // UIImageView's `setImage:`, will internally call layer's `setContentsTransoforms:` based on the image.imageOrientation. The `contentsTransoforms` will effect layer rendering rotation because the CGImage's bitmap buffer does not actually take rotation.
+            // However, when call `setImage:nil`, this `contentsTransoforms` will not be reset to identity. Further animation frame will rendered as rotated. So we must firstlly call it with the poster image to clear the previous state
+            super.image = animatedImage.posterImage;
             // Clear out the image.
             super.image = nil;
             // Ensure disabled highlighting; it's not supported (see `-setHighlighted:`).
@@ -209,6 +216,7 @@
     return intrinsicContentSize;
 }
 
+#pragma mark Smart Invert Colors
 
 #pragma mark - UIImageView Method Overrides
 #pragma mark Image Data
