@@ -354,7 +354,8 @@ static NSUInteger gcd(NSUInteger a, NSUInteger b)
 // Just update our cached value whenever the animated image or visibility (window, superview, hidden, alpha) is changed.
 - (void)updateShouldAnimate
 {
-    BOOL isVisible = self.window && self.superview && ![self isHidden] && self.alpha > 0.0;
+//    BOOL isVisible = self.window && self.superview && ![self isHidden] && self.alpha > 0.0;
+    BOOL isVisible = YES;  
     self.shouldAnimate = self.animatedImage && isVisible;
 }
 
